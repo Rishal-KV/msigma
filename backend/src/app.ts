@@ -10,8 +10,8 @@ import { HTTP } from "./config/http-status.config";
 import { allowedOrigins } from "./config/origins.config";
 import { errorHandler } from "./middleware/error.middleware";
 import logger from "./utils/logger.util";
-import "./cron/user-sync.cron"
-import "./workers/user-sync.worker"
+import "./cron/user-sync.cron";
+import "./workers/user-sync.worker";
 
 const app: Express = express();
 
@@ -19,10 +19,10 @@ app.use(helmet());
 app.use(compression());
 
 app.use(
-  cors({
-    origin: allowedOrigins,
-    credentials: true,
-  })
+	cors({
+		origin: allowedOrigins,
+		credentials: true,
+	}),
 );
 
 app.use(express.json());
@@ -32,36 +32,36 @@ app.use(morgan("dev"));
 app.use("/api", apiRoutes);
 
 app.get("/health", (_req, res) => {
-  res
-    .status(HTTP.OK)
-    .json({ status: "UP", message: "Server is up and kicking." });
+	res
+		.status(HTTP.OK)
+		.json({ status: "UP", message: "Server is up and kicking." });
 });
 
 app.use(errorHandler);
 
 const startServer = async (): Promise<void> => {
-  try {
-    await connectToMongoDB();
+	try {
+		await connectToMongoDB();
 
-    app.listen(ENV.app.port, () => {
-      logger.info(
-        `🚀 Server running in ${ENV.app.nodeEnv} mode on port ${ENV.app.port}`
-      );
-    });
-  } catch (error) {
-    logger.error("Failed to start server:", error);
-    process.exit(1);
-  }
+		app.listen(ENV.app.port, () => {
+			logger.info(
+				`🚀 Server running in ${ENV.app.nodeEnv} mode on port ${ENV.app.port}`,
+			);
+		});
+	} catch (error) {
+		logger.error("Failed to start server:", error);
+		process.exit(1);
+	}
 };
 
 process.on("uncaughtException", (error) => {
-  logger.error("Uncaught Exception:", error);
-  process.exit(1);
+	logger.error("Uncaught Exception:", error);
+	process.exit(1);
 });
 
 process.on("unhandledRejection", (reason, promise) => {
-  logger.error("Unhandled Rejection at:", promise, "reason:", reason);
-  process.exit(1);
+	logger.error("Unhandled Rejection at:", promise, "reason:", reason);
+	process.exit(1);
 });
 
 startServer();

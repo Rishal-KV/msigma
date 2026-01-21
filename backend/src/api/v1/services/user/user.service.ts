@@ -1,6 +1,6 @@
 import { HTTP } from "../../../../config/http-status.config";
 import { AppError } from "../../../../middleware/error.middleware";
-import { IUser, UserModel } from "../../../../models/user.model";
+import { type IUser, UserModel } from "../../../../models/user.model";
 import type { ServiceResponse } from "../../../../typings";
 import { formValidationSchema } from "../../../../utils/validators/user";
 
@@ -15,9 +15,8 @@ interface CreateUserParams {
 export class UserCreateService {
   private readonly userModel = UserModel;
 
-  async create(params: CreateUserParams): ServiceResponse {
+  async create(params: CreateUserParams): Promise<ServiceResponse> {
     try {
-      // 🔐 Joi validation
       const { error, value } = formValidationSchema.validate(params, {
         abortEarly: false,
       });
@@ -25,7 +24,7 @@ export class UserCreateService {
       if (error) {
         throw new AppError(
           error.details.map((e) => e.message).join(", "),
-          HTTP.BAD_REQUEST
+          HTTP.BAD_REQUEST,
         );
       }
 
@@ -70,31 +69,35 @@ export class UserCreateService {
   }
 
   async getAll(
-    page: number = 1, 
-    limit: number = 10, 
-    search?: string, 
-    status?: string
+    page: number = 1,
+    limit: number = 10,
+    search?: string,
+    status?: string,
   ): Promise<ServiceResponse<IUser[]>> {
     try {
       const skip = (page - 1) * limit;
-      
+
       const query: any = {};
-      
+
       if (status) {
         query.syncStatus = status;
       }
-      
+
       if (search) {
         query.$or = [
           { name: { $regex: search, $options: "i" } },
           { email: { $regex: search, $options: "i" } },
-          { phone: { $regex: search, $options: "i" } }
+          { phone: { $regex: search, $options: "i" } },
         ];
       }
 
       const [users, total] = await Promise.all([
-        this.userModel.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit),
-        this.userModel.countDocuments(query)
+        this.userModel
+          .find(query)
+          .sort({ createdAt: -1 })
+          .skip(skip)
+          .limit(limit),
+        this.userModel.countDocuments(query),
       ]);
 
       const totalPages = Math.ceil(total / limit);
@@ -107,7 +110,7 @@ export class UserCreateService {
           total,
           page,
           limit,
-          totalPages
+          totalPages,
         },
         status: HTTP.OK,
       };

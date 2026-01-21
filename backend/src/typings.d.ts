@@ -1,4 +1,4 @@
-export type ServiceResponse<T = {} | [] | any> = Promise<{
+export interface ServiceResponse<T = any> {
   success: boolean;
   data?: T;
   pagination?: {
@@ -9,4 +9,4 @@ export type ServiceResponse<T = {} | [] | any> = Promise<{
   };
   status: number;
   message: string;
-}>;
+}

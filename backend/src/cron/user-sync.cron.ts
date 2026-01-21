@@ -1,9 +1,9 @@
 import cron from "node-cron";
-import { userSyncQueue } from "../queues/user-sync.queue";
 import { UserModel } from "../models/user.model";
+import { userSyncQueue } from "../queues/user-sync.queue";
 
 // Every 2 hours
-cron.schedule("*/3 * * * * *", async () => {
+cron.schedule("0 */2 * * *", async () => {
     console.log("⏰ User sync scheduler started");
 
     const users = await UserModel.find({
@@ -17,8 +17,7 @@ cron.schedule("*/3 * * * * *", async () => {
         return;
     }
 
-    console.log({ users })
-    await userSyncQueue.add("user-sync-queue", {
+    await userSyncQueue.add("user-sync-job", {
         users: users.map((u) => ({
             id: u.id,
             name: u.name,
@@ -28,7 +27,6 @@ cron.schedule("*/3 * * * * *", async () => {
             dob: u.dob,
         })),
     });
-
 
     console.log(`📦 Queued ${users.length} users`);
 });

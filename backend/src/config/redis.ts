@@ -1,4 +1,8 @@
-export const redisConnection = {
-  host: "127.0.0.1",
-  port: 6379,
+import { RedisOptions } from "bullmq";
+import { ENV } from "./env";
+
+export const redisConnection: RedisOptions = {
+host: ENV.redis.host,
+port: ENV.redis.port,
+password: ENV.redis.password,
 };
