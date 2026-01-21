@@ -1,9 +1,6 @@
-import { ENV } from "./env";
+import { RedisOptions } from "bullmq";
 
-export const redisConnection = {
-        host: ENV.redis.host,
-        port: ENV.redis.port,
-        password: ENV.redis.password,
-        // For Render/External Redis, you might need TLS
-        tls: ENV.app.nodeEnv === "production" ? {} : undefined
+export const redisConnection: RedisOptions = {
+  connectionName: "user-sync-redis",
+  url: process.env.REDIS_URL!,
 };
