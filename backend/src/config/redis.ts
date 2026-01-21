@@ -1,4 +1,9 @@
+import { ENV } from "./env";
+
 export const redisConnection = {
-	host: "127.0.0.1",
-	port: 6379,
+        host: ENV.redis.host,
+        port: ENV.redis.port,
+        password: ENV.redis.password,
+        // For Render/External Redis, you might need TLS
+        tls: ENV.app.nodeEnv === "production" ? {} : undefined
 };

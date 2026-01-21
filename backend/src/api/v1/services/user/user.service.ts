@@ -15,7 +15,7 @@ interface CreateUserParams {
 export class UserCreateService {
   private readonly userModel = UserModel;
 
-  async create(params: CreateUserParams): ServiceResponse {
+  async create(params: CreateUserParams): Promise<ServiceResponse> {
     try {
       const { error, value } = formValidationSchema.validate(params, {
         abortEarly: false,
