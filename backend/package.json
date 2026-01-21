@@ -1,7 +1,7 @@
 {
-  "name": "social-notch-api",
+  "name": "msigma-api",
   "version": "1.0.0",
-  "description": "API for Social Notch",
+  "description": "API for msigma",
   "main": "dist/app.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/app.ts",

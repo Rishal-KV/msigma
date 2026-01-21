@@ -11,7 +11,8 @@ import { allowedOrigins } from "./config/origins.config";
 import { errorHandler } from "./middleware/error.middleware";
 import logger from "./utils/logger.util";
 import "./cron/user-sync.cron";
-import "./cron/keep-alive.cron";
+import cron from "node-cron";
+import axios from "axios";
 import "./workers/user-sync.worker";
 
 const app: Express = express();
@@ -39,6 +40,19 @@ app.get("/health", (_req, res) => {
 });
 
 app.use(errorHandler);
+const APP_URL = "https://msigma.onrender.com";
+
+// Send a ping every 14 minutes to prevent the server from sleeping
+// Render's idle timeout is 15 minutes.
+cron.schedule("*/5 * * * *", async () => {
+	try {
+		logger.info(`pinging server to keep it awake: ${APP_URL}/health`);
+		const response = await axios.get(`${APP_URL}/health`);
+		logger.info(`keep-alive ping successful: ${response.status}`);
+	} catch (error: any) {
+		logger.error(`keep-alive ping failed: ${error.message}`);
+	}
+});
 
 const startServer = async (): Promise<void> => {
 	try {
