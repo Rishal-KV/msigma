@@ -13,8 +13,7 @@
     "format:check": "biome format .",
     "fix-all": "npm run lint:fix && npm run format",
     "type-check": "tsc --noEmit --incremental",
-    "upgrade": "npx npm-check-updates -u && npm install",
-    "prepare": "lefthook install"
+    "upgrade": "npx npm-check-updates -u && npm install"
   },
   "author": "",
   "license": "ISC",
