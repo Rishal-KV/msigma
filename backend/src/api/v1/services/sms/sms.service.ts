@@ -3,26 +3,26 @@ import { BrevoSmsProvider } from "./brevo.provider";
 import type { SmsMessage, SmsProvider, SmsResponse } from "./types";
 
 export class SmsService {
-  constructor(private provider: SmsProvider) {}
+	constructor(private provider: SmsProvider) {}
 
-  async sendSms(message: SmsMessage): Promise<SmsResponse> {
-    return this.provider.sendSms(message);
-  }
+	async sendSms(message: SmsMessage): Promise<SmsResponse> {
+		return this.provider.sendSms(message);
+	}
 
-  async sendBulkSms(messages: SmsMessage[]): Promise<SmsResponse[]> {
-    const responses: SmsResponse[] = [];
+	async sendBulkSms(messages: SmsMessage[]): Promise<SmsResponse[]> {
+		const responses: SmsResponse[] = [];
 
-    for (const message of messages) {
-      const response = await this.provider.sendSms(message);
-      responses.push(response);
-    }
+		for (const message of messages) {
+			const response = await this.provider.sendSms(message);
+			responses.push(response);
+		}
 
-    return responses;
-  }
+		return responses;
+	}
 }
 
 const brevoProvider = new BrevoSmsProvider({
-  apiKey: smsConfig.brevo.apiKey,
+	apiKey: smsConfig.brevo.apiKey,
 });
 
 // Create the SMS service with the provider
