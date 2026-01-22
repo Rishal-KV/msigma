@@ -24,7 +24,11 @@ export const columns: ColumnDef<UserPayment>[] = [
     },
     {
         accessorKey: "phone",
-        header: "Phone",
+        header: "Mobile Number",
+        cell: ({ row }) => {
+            const phone = row.getValue("phone") as string
+            return phone || <span className="text-muted-foreground">-</span>
+        }
     },
     {
         accessorKey: "profileUrl",

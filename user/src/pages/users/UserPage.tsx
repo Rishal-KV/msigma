@@ -48,6 +48,15 @@ export default function UserPage() {
         return () => clearTimeout(delayDebounceFn)
     }, [fetchData, page, search, status])
 
+    // Auto-refresh every 3 minutes
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            fetchData(page, search, status)
+        }, 3 * 60 * 1000)
+
+        return () => clearInterval(intervalId)
+    }, [fetchData, page, search, status])
+
     const handlePageChange = (newPage: number) => {
         setPage(newPage)
     }
